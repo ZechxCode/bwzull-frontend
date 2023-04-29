@@ -2,6 +2,7 @@
 import { RouterLink } from "vue-router";
 
 defineProps({
+    id: Number,
     title: String,
     subcat: String,
     image: String,
