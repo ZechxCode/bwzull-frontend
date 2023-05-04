@@ -1,31 +1,39 @@
 <script setup>
-import Gallery from '@/components/detail/Gallery.vue';
-import { useRoute, RouterLink } from 'vue-router'
-import { ref, onMounted, computed } from 'vue'
-import axios from 'axios';
+import Gallery from "@/components/detail/Gallery.vue";
+import { useRoute, RouterLink } from "vue-router";
+import { ref, onMounted, computed } from "vue";
+import { useUserStore } from "../stores/user";
+import axios from "axios";
 
-const item = ref(false)
-const route = useRoute()
+const item = ref(false);
+const route = useRoute();
+
+const userStore = useUserStore();
+const getUser = computed(() => userStore.getUser);
+const isLoggedin = computed(() => userStore.isLoggedIn);
 
 async function getProduct() {
   try {
-    const response = await axios.get('https://zullkit-backend.demo.belajarkoding.com/api/products?id=' + route.params.id)
-    console.log(response.data.data)
-    item.value = response.data.data
+    const response = await axios.get(
+      "https://zullkit-backend.demo.belajarkoding.com/api/products?id=" +
+      route.params.id
+    );
+    console.log(response.data.data);
+    item.value = response.data.data;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 
 const features = computed(() => {
-  return item.value.features.split(',')
-})
-
+  return item.value.features.split(",");
+});
 
 onMounted(() => {
-  window.scrollTo(0, 0)
-  getProduct()
-})
+  window.scrollTo(0, 0);
+  userStore.fetchUser();
+  getProduct();
+});
 </script>
 
 <template>
@@ -79,9 +87,15 @@ onMounted(() => {
                   </li>
                 </ul>
               </div>
-              <RouterLink to="/pricing"
+
+              <a v-if="isLoggedin && getUser.data.subscription.length > 0" :href="item.file"
                 class="inline-flex items-center justify-center w-full px-8 py-3 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-full hover:bg-indigo-700 md:py-2 md:text-md md:px-10 hover:shadow">
                 Download Now
+              </a>
+
+              <RouterLink v-else to="/pricing"
+                class="inline-flex items-center justify-center w-full px-8 py-3 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-full hover:bg-indigo-700 md:py-2 md:text-md md:px-10 hover:shadow">
+                Subscribe
               </RouterLink>
             </div>
           </div>
