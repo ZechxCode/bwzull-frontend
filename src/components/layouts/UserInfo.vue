@@ -2,11 +2,14 @@
 
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
+import { useUserStore } from '../../stores/user';
 
+const userStore = useUserStore()
 
 const props = defineProps({
     user: Object
 })
+
 </script>
 
 <template>
@@ -45,21 +48,15 @@ const props = defineProps({
                         </MenuItem>
                         <form method="POST" action="#">
                             <MenuItem v-slot="{ active }" class="text-left">
-                            <button type="submit"
+                            <a href="/login" @click="userStore.logout()"
                                 :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block w-full px-7 py-2 text-left text-sm']">Sign
-                                out</button>
+                                out</a>
                             </MenuItem>
                         </form>
                     </div>
                 </MenuItems>
             </transition>
         </Menu>
-
-
-
-
-
-
 
     </div>
 </template>

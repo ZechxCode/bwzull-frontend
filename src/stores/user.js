@@ -1,6 +1,7 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 
+
 export const useUserStore = defineStore({
     id: "user",
     state: () => ({
@@ -30,5 +31,10 @@ export const useUserStore = defineStore({
                 this.user = false;
             }
         },
+        logout() {
+            this.user = null;
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("token_type");
+        }
     },
 });
